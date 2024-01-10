@@ -40,8 +40,8 @@ class RestClient {
 
   Future<Response<dynamic>> get(
     APIType apiType,
-    String path,
-    Map<String, dynamic> params, {
+    String path, {
+    Map<String, dynamic>? params,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
   }) async {
