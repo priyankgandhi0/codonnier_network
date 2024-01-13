@@ -6,10 +6,15 @@ Just add this package in the app and ready to rock the server when it is idle.
 # How to add
 ## Step 1. Generate SSH Key pair
 * Enter the below command in your terminal and hit enter.
-* `ssh-keygen -t ed25519 -C "priyankgandhi000@gmail.com"`
+```
+ssh-keygen -t ed25519 -C "priyankgandhi000@gmail.com"
+```
 * Then it will ask you to add path for saving a file, you can give any location or hit enter again.
 * Then it will ask you passphrase, you can add password for the file or hit enter again.
-* As you hit the enter your SSH Key file is generated. Here is the default location `/Users/imac/.ssh/id_ed25519.pub`.
+* As you hit the enter your SSH Key file is generated. Here is the default location
+```
+/Users/imac/.ssh/id_ed25519.pub
+```
 
 ## Step 2. Add your public key to your Github account
 * Navigate to your profile page on github at this [link](https://github.com/settings/profile).
@@ -23,10 +28,14 @@ Just add this package in the app and ready to rock the server when it is idle.
 
 ## Step 3. Add/Update your config file with this content.
 * Enter the below command in your terminal and hit enter.
-* `touch ~/.ssh/config`
+```
+touch ~/.ssh/config
+```
 * It will create a file in the inside the folder.
 * Then enter below command and hit enter.
-* `open ~/.ssh/config`
+```
+open ~/.ssh/config
+```
 * It will open the config file then enter below lines and save it.
 
 ```
