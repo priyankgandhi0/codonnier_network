@@ -28,23 +28,28 @@ Just add this package in the app and ready to rock the server when it is idle.
 * Then enter below command and hit enter.
 * `open ~/.ssh/config`
 * It will open the config file then enter below lines and save it.
->Host github
-> >HostName github.com  
-> >PreferredAuthentications publickey # authentication mechanism  
-> >User git # standard username when authenticating with git  
-> >AddKeysToAgent yes  
-> >UseKeychain yes  
-> >IdentityFile ---Location of file---/FileName
+
+```
+Host github
+  HostName github.com  
+  PreferredAuthentications publickey # authentication mechanism  
+  User git # standard username when authenticating with git  
+  AddKeysToAgent yes  
+  UseKeychain yes  
+  IdentityFile ---Location of file---/FileName
+```
 
 ## Step 4. Add the package dependency to your flutter project as shown below.
 * Open pubspec.yml and add dependency as shown below:
->dependencies:
-> >	my_flutter_package:
-> > >git:
-> > > >url: git@github.com:your_private_path/my_flutter_package.git  
-> > > >ref: master
+```
+dependencies:
+    my_flutter_package:
+      git:
+        url: git@github.com:your_private_path/my_flutter_package.git  
+        ref: master
+```
 * Note: ref is optional and can be skipped. If you have a branch, you can change it to point to that branch.
 
 ## Step 5. Update the dependencies
 * Navigate to your flutter project and  
-  flutter pub get
+  `flutter pub get`
