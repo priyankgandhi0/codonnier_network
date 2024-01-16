@@ -88,6 +88,81 @@ class RestClient {
         .catchError(_handleException);
   }
 
+  Future<Response<dynamic>> put(
+    APIType apiType,
+    String path,
+    Map<String, dynamic> data, {
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? query,
+  }) async {
+    _addDioInterceptorList();
+
+    final standardHeaders = await _getApiOptions(apiType);
+    if (headers != null) {
+      standardHeaders.headers?.addAll(headers);
+    }
+
+    return _dio
+        .put(
+          path,
+          data: data,
+          options: standardHeaders,
+        )
+        .then((value) => value)
+        .catchError(_handleException);
+  }
+
+  Future<Response<dynamic>> delete(
+    APIType apiType,
+    String path, {
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? query,
+  }) async {
+    _addDioInterceptorList();
+
+    final standardHeaders = await _getApiOptions(apiType);
+    if (headers != null) {
+      standardHeaders.headers?.addAll(headers);
+    }
+
+    return _dio
+        .delete(
+          path,
+          data: data,
+          queryParameters: query,
+          options: standardHeaders,
+        )
+        .then((value) => value)
+        .catchError(_handleException);
+  }
+
+  /// Supports media upload
+  Future<Response<dynamic>> postFormData(
+    APIType apiType,
+    String path,
+    Map<String, dynamic> data, {
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? query,
+  }) async {
+    _addDioInterceptorList();
+
+    final standardHeaders = await _getApiOptions(apiType);
+    standardHeaders.headers?.addAll({
+      'Content-Type': 'multipart/form-data',
+    });
+
+    return _dio
+        .post(
+          path,
+          data: FormData.fromMap(data),
+          options: standardHeaders,
+          queryParameters: query,
+        )
+        .then((value) => value)
+        .catchError(_handleException);
+  }
+
   void _addDioInterceptorList() {
     List<Interceptor> interceptorList = [];
     _dio.interceptors.clear();
