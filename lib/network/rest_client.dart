@@ -41,13 +41,16 @@ class RestClient {
   Future<Response<dynamic>> get(
     APIType apiType,
     String path, {
-    Map<String, dynamic>? params,
-    Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
+    Map<String, dynamic>? headers,
   }) async {
     _addDioInterceptorList();
 
     final standardOptions = await _getApiOptions(apiType);
+
+    if (headers != null) {
+      standardOptions.headers?.addAll(headers);
+    }
 
     return _dio
         .get(
@@ -75,7 +78,12 @@ class RestClient {
     }
 
     return _dio
-        .post(path, queryParameters: query, options: standardOptions)
+        .post(
+          path,
+          data: data,
+          queryParameters: query,
+          options: standardOptions,
+        )
         .then((value) => value)
         .catchError(_handleException);
   }
