@@ -52,13 +52,14 @@ Host github
 * Open pubspec.yml and add dependency as shown below:
 ```
 dependencies:
-    my_flutter_package:
-      git:
-        url: git@github.com:your_private_path/my_flutter_package.git  
-        ref: master
+  codonnier_network:
+    git:
+      url: https://github.com/priyankgandhi0/codonnier_network.git
+      ref: main
 ```
 * Note: ref is optional and can be skipped. If you have a branch, you can change it to point to that branch.
 
 ## Step 5. Update the dependencies
 * Navigate to your flutter project and  
   `flutter pub get`
+* If this command shows an error then please close and re-open the project. And execute `flutter pub get` command again.
