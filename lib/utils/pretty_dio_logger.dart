@@ -1,7 +1,7 @@
-import 'package:dio/dio.dart';
-
 import 'dart:math' as math;
 import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
 
 /// Taken/Copied from here: https://github.com/Milad-Akarie/pretty_dio_logger/blob/master/lib/pretty_dio_logger.dart
 class PrettyDioLogger extends Interceptor {
@@ -45,14 +45,14 @@ class PrettyDioLogger extends Interceptor {
 
   PrettyDioLogger(
       {this.request = true,
-        this.requestHeader = false,
-        this.requestBody = false,
-        this.responseHeader = false,
-        this.responseBody = true,
-        this.error = true,
-        this.maxWidth = 90,
-        this.compact = true,
-        this.logPrint = print});
+      this.requestHeader = true,
+      this.requestBody = true,
+      this.responseHeader = true,
+      this.responseBody = true,
+      this.error = true,
+      this.maxWidth = 90,
+      this.compact = true,
+      this.logPrint = print});
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -80,7 +80,8 @@ class PrettyDioLogger extends Interceptor {
             ..addEntries(data.fields)
             ..addEntries(data.files);
           _printMapAsTable(formDataMap, header: 'Form data | ${data.boundary}');
-        } else {
+        }
+        if (data is! Map && data is! FormData) {
           _printBlock(data.toString());
         }
       }
@@ -89,13 +90,13 @@ class PrettyDioLogger extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     if (error) {
-      if (err.type == DioErrorType.badResponse) {
+      if (err.type == DioExceptionType.badResponse) {
         final uri = err.response?.requestOptions.uri;
         _printBoxed(
             header:
-            'DioError ║ Status: ${err.response?.statusCode} ${err.response?.statusMessage}',
+                'DioError ║ Status: ${err.response?.statusCode} ${err.response?.statusMessage}',
             text: uri.toString());
         if (err.response != null && err.response?.data != null) {
           logPrint('╔ ${err.type.toString()}');
