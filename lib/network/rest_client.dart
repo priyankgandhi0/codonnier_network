@@ -185,7 +185,10 @@ class RestClient {
   }
 
   dynamic _handleException(error) {
-    dynamic errorData = error.response!.data;
+    if ((error as DioException).type == DioExceptionType.connectionError) {
+      throw InternetNotAvailable(error);
+    }
+    dynamic errorData = error.response?.data;
 
     switch (error.response?.statusCode) {
       case 400:
