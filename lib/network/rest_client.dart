@@ -148,6 +148,9 @@ class RestClient {
     _addDioInterceptorList();
 
     final standardHeaders = await _getApiOptions(apiType);
+    if (headers != null) {
+      standardHeaders.headers?.addAll(headers);
+    }
     standardHeaders.headers?.addAll({
       'Content-Type': 'multipart/form-data',
     });
