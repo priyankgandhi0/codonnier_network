@@ -38,9 +38,8 @@ class RestClient {
     return _instance;
   }
 
-  Future<Response<dynamic>> get(
-    APIType apiType,
-    String path, {
+  Future<Response<dynamic>> get(APIType apiType, {
+    String? path,
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
   }) async {
@@ -54,7 +53,7 @@ class RestClient {
 
     return _dio
         .get(
-          path,
+          path ?? _instance.baseUrl,
           queryParameters: query,
           options: standardOptions,
         )
@@ -64,8 +63,8 @@ class RestClient {
 
   Future<Response<dynamic>> post(
     APIType apiType,
-    String path,
     Map<String, dynamic> data, {
+    String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
   }) async {
@@ -79,7 +78,7 @@ class RestClient {
 
     return _dio
         .post(
-          path,
+          path ?? _instance.baseUrl,
           data: data,
           queryParameters: query,
           options: standardOptions,
@@ -90,8 +89,8 @@ class RestClient {
 
   Future<Response<dynamic>> put(
     APIType apiType,
-    String path,
     Map<String, dynamic> data, {
+    String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
   }) async {
@@ -104,7 +103,7 @@ class RestClient {
 
     return _dio
         .put(
-          path,
+          path ?? _instance.baseUrl,
           data: data,
           options: standardHeaders,
         )
@@ -112,9 +111,8 @@ class RestClient {
         .catchError(_handleException);
   }
 
-  Future<Response<dynamic>> delete(
-    APIType apiType,
-    String path, {
+  Future<Response<dynamic>> delete(APIType apiType, {
+    String? path,
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
@@ -128,7 +126,7 @@ class RestClient {
 
     return _dio
         .delete(
-          path,
+          path ?? _instance.baseUrl,
           data: data,
           queryParameters: query,
           options: standardHeaders,
@@ -140,8 +138,8 @@ class RestClient {
   /// Supports media upload
   Future<Response<dynamic>> postFormData(
     APIType apiType,
-    String path,
     Map<String, dynamic> data, {
+    String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
   }) async {
@@ -157,7 +155,7 @@ class RestClient {
 
     return _dio
         .post(
-          path,
+          path ?? _instance.baseUrl,
           data: FormData.fromMap(data),
           options: standardHeaders,
           queryParameters: query,

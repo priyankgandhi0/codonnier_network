@@ -1,7 +1,7 @@
 name: codonnier_network
 description: "Just add this package in the app and ready to rock the server when it is idle."
 
-version: 1.0.5+6
+version: 1.0.6+7
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
