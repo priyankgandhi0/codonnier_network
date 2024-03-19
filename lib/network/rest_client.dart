@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'api_type.dart';
 
 class RestClient {
-  static final RestClient _instance = RestClient._internal();
+  static final RestClient instance = RestClient._internal();
 
   late Dio _dio;
   late int connectionTO;
@@ -22,10 +22,10 @@ class RestClient {
     int connectionTO = 30000,
     int receiveTO = 30000,
   }) {
-    _instance.baseUrl = baseUrl;
-    _instance.token = token;
-    _instance.connectionTO = connectionTO;
-    _instance.receiveTO = receiveTO;
+    instance.baseUrl = baseUrl;
+    instance.token = token;
+    instance.connectionTO = connectionTO;
+    instance.receiveTO = receiveTO;
 
     BaseOptions options = BaseOptions(
       baseUrl: baseUrl,
@@ -33,9 +33,9 @@ class RestClient {
       receiveTimeout: Duration(milliseconds: receiveTO),
     );
 
-    _instance._dio = Dio(options);
+    instance._dio = Dio(options);
 
-    return _instance;
+    return instance;
   }
 
   Future<Response<dynamic>> get(APIType apiType, {
@@ -53,7 +53,7 @@ class RestClient {
 
     return _dio
         .get(
-          path ?? _instance.baseUrl,
+          path ?? instance.baseUrl,
           queryParameters: query,
           options: standardOptions,
         )
@@ -78,7 +78,7 @@ class RestClient {
 
     return _dio
         .post(
-          path ?? _instance.baseUrl,
+          path ?? instance.baseUrl,
           data: data,
           queryParameters: query,
           options: standardOptions,
@@ -103,7 +103,7 @@ class RestClient {
 
     return _dio
         .put(
-          path ?? _instance.baseUrl,
+          path ?? instance.baseUrl,
           data: data,
           options: standardHeaders,
         )
@@ -126,7 +126,7 @@ class RestClient {
 
     return _dio
         .delete(
-          path ?? _instance.baseUrl,
+          path ?? instance.baseUrl,
           data: data,
           queryParameters: query,
           options: standardHeaders,
@@ -155,7 +155,7 @@ class RestClient {
 
     return _dio
         .post(
-          path ?? _instance.baseUrl,
+          path ?? instance.baseUrl,
           data: FormData.fromMap(data),
           options: standardHeaders,
           queryParameters: query,
