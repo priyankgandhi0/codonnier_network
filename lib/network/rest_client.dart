@@ -1,5 +1,6 @@
-import 'package:codonnier_network/utils/failure.dart';
-import 'package:codonnier_network/utils/pretty_dio_logger.dart';
+import 'dart:convert';
+
+import 'package:codonnier_network/network.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,19 +14,24 @@ class RestClient {
   late int receiveTO;
   late String baseUrl;
   late String token;
+  late CancelToken cancelToken;
+  late VoidCallback? onSessionExpired;
 
   RestClient._internal();
 
   factory RestClient({
     required String baseUrl,
     required String token,
-    int connectionTO = 30000,
-    int receiveTO = 30000,
+    VoidCallback? onSessionExpired,
+    required int connectionTO,
+    required int receiveTO,
   }) {
     instance.baseUrl = baseUrl;
     instance.token = token;
     instance.connectionTO = connectionTO;
-    instance.receiveTO = receiveTO;
+    instance.connectionTO = receiveTO;
+    instance.cancelToken = CancelToken();
+    instance.onSessionExpired = onSessionExpired;
 
     BaseOptions options = BaseOptions(
       baseUrl: baseUrl,
@@ -38,7 +44,8 @@ class RestClient {
     return instance;
   }
 
-  Future<Response<dynamic>> get(APIType apiType, {
+  Future<Response<dynamic>> get(
+    APIType apiType, {
     String? path,
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
@@ -53,12 +60,27 @@ class RestClient {
 
     return _dio
         .get(
-          path ?? instance.baseUrl,
-          queryParameters: query,
-          options: standardOptions,
-        )
-        .then((value) => value)
-        .catchError(_handleException);
+      path ?? instance.baseUrl,
+      queryParameters: query,
+      options: standardOptions,
+      cancelToken: cancelToken,
+    )
+        .then((response) {
+      Map<String, dynamic> map =
+          (response.data is String) ? jsonDecode(response.data) : response.data;
+      if (map['force_logout'] != null && map['force_logout'] == 1) {
+        response.requestOptions.cancelToken!.cancel();
+        if (onSessionExpired != null) {
+          onSessionExpired!();
+        }
+        throw DioException(
+            requestOptions: response.requestOptions,
+            type: DioExceptionType.cancel,
+            message:
+                'The request was manually cancelled because Auth Token is expired.');
+      }
+      return response;
+    }).catchError(_handleException);
   }
 
   Future<Response<dynamic>> post(
@@ -78,13 +100,28 @@ class RestClient {
 
     return _dio
         .post(
-          path ?? instance.baseUrl,
-          data: data,
-          queryParameters: query,
-          options: standardOptions,
-        )
-        .then((value) => value)
-        .catchError(_handleException);
+      path ?? instance.baseUrl,
+      data: data,
+      queryParameters: query,
+      options: standardOptions,
+      cancelToken: cancelToken,
+    )
+        .then((response) {
+      Map<String, dynamic> map =
+          (response.data is String) ? jsonDecode(response.data) : response.data;
+      if (map['force_logout'] != null && map['force_logout'] == 1) {
+        response.requestOptions.cancelToken!.cancel();
+        if (onSessionExpired != null) {
+          onSessionExpired!();
+        }
+        throw DioException(
+            requestOptions: response.requestOptions,
+            type: DioExceptionType.cancel,
+            message:
+                'The request was manually cancelled because Auth Token is expired.');
+      }
+      return response;
+    }).catchError(_handleException);
   }
 
   Future<Response<dynamic>> put(
@@ -103,15 +140,31 @@ class RestClient {
 
     return _dio
         .put(
-          path ?? instance.baseUrl,
-          data: data,
-          options: standardHeaders,
-        )
-        .then((value) => value)
-        .catchError(_handleException);
+      path ?? instance.baseUrl,
+      data: data,
+      options: standardHeaders,
+      cancelToken: cancelToken,
+    )
+        .then((response) {
+      Map<String, dynamic> map =
+          (response.data is String) ? jsonDecode(response.data) : response.data;
+      if (map['force_logout'] != null && map['force_logout'] == 1) {
+        response.requestOptions.cancelToken!.cancel();
+        if (onSessionExpired != null) {
+          onSessionExpired!();
+        }
+        throw DioException(
+            requestOptions: response.requestOptions,
+            type: DioExceptionType.cancel,
+            message:
+                'The request was manually cancelled because Auth Token is expired.');
+      }
+      return response;
+    }).catchError(_handleException);
   }
 
-  Future<Response<dynamic>> delete(APIType apiType, {
+  Future<Response<dynamic>> delete(
+    APIType apiType, {
     String? path,
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
@@ -126,13 +179,28 @@ class RestClient {
 
     return _dio
         .delete(
-          path ?? instance.baseUrl,
-          data: data,
-          queryParameters: query,
-          options: standardHeaders,
-        )
-        .then((value) => value)
-        .catchError(_handleException);
+      path ?? instance.baseUrl,
+      data: data,
+      queryParameters: query,
+      options: standardHeaders,
+      cancelToken: cancelToken,
+    )
+        .then((response) {
+      Map<String, dynamic> map =
+          (response.data is String) ? jsonDecode(response.data) : response.data;
+      if (map['force_logout'] != null && map['force_logout'] == 1) {
+        response.requestOptions.cancelToken!.cancel();
+        if (onSessionExpired != null) {
+          onSessionExpired!();
+        }
+        throw DioException(
+            requestOptions: response.requestOptions,
+            type: DioExceptionType.cancel,
+            message:
+                'The request was manually cancelled because Auth Token is expired.');
+      }
+      return response;
+    }).catchError(_handleException);
   }
 
   /// Supports media upload
@@ -155,13 +223,28 @@ class RestClient {
 
     return _dio
         .post(
-          path ?? instance.baseUrl,
-          data: FormData.fromMap(data),
-          options: standardHeaders,
-          queryParameters: query,
-        )
-        .then((value) => value)
-        .catchError(_handleException);
+      path ?? instance.baseUrl,
+      data: FormData.fromMap(data),
+      options: standardHeaders,
+      queryParameters: query,
+      cancelToken: cancelToken,
+    )
+        .then((response) {
+      Map<String, dynamic> map =
+          (response.data is String) ? jsonDecode(response.data) : response.data;
+      if (map['force_logout'] != null && map['force_logout'] == 1) {
+        response.requestOptions.cancelToken!.cancel();
+        if (onSessionExpired != null) {
+          onSessionExpired!();
+        }
+        throw DioException(
+            requestOptions: response.requestOptions,
+            type: DioExceptionType.cancel,
+            message:
+                'The request was manually cancelled because Auth Token is expired.');
+      }
+      return response;
+    }).catchError(_handleException);
   }
 
   void _addDioInterceptorList() {
@@ -188,6 +271,9 @@ class RestClient {
   dynamic _handleException(error) {
     if ((error as DioException).type == DioExceptionType.connectionError) {
       throw InternetNotAvailable(error);
+    }
+    if (error.type == DioExceptionType.cancel) {
+      throw SessionExpired(error);
     }
     dynamic errorData = error.response?.data;
 

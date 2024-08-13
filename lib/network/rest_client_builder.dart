@@ -6,12 +6,23 @@ class RestClientBuilder extends StatelessWidget {
   final ClientBuilder builder;
   final String baseUrl;
   final RestClient restClient;
+  final VoidCallback? onSessionExpired;
+  final int? connectionTO;
+  final int? receiveTO;
 
   RestClientBuilder({
     super.key,
     required this.builder,
     required this.baseUrl,
-  }) : restClient = RestClient(baseUrl: baseUrl, token: '');
+    this.onSessionExpired,
+    this.connectionTO,
+    this.receiveTO,
+  }) : restClient = RestClient(
+            baseUrl: baseUrl,
+            token: '',
+            onSessionExpired: onSessionExpired,
+            connectionTO: connectionTO ?? 30000,
+            receiveTO: receiveTO ?? 30000);
 
   @override
   Widget build(BuildContext context) {

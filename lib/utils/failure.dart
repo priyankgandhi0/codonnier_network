@@ -17,6 +17,11 @@ abstract class Failure extends Equatable {
 }
 
 /// Client Error Responses
+class SessionExpired extends Failure {
+  const SessionExpired(dynamic error)
+      : super('Current session is expired', '0', error);
+}
+
 class BadRequest extends Failure {
   const BadRequest(dynamic error) : super('Bad Request', '400', error);
 }
