@@ -56,8 +56,8 @@ class PrettyDioLogger extends Interceptor {
   /// Default constructor
   PrettyDioLogger({
     this.request = true,
-    this.requestHeader = false,
-    this.requestBody = false,
+    this.requestHeader = true,
+    this.requestBody = true,
     this.responseHeader = false,
     this.responseBody = true,
     this.error = true,
