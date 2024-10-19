@@ -203,6 +203,45 @@ class RestClient {
     }).catchError(_handleException);
   }
 
+  Future<Response<dynamic>> patch(
+    APIType apiType,
+    Map<String, dynamic> data, {
+    String? path,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? query,
+  }) async {
+    _addDioInterceptorList();
+
+    final standardHeaders = await _getApiOptions(apiType);
+    if (headers != null) {
+      standardHeaders.headers?.addAll(headers);
+    }
+
+    return _dio
+        .patch(
+      path ?? instance.baseUrl,
+      data: data,
+      options: standardHeaders,
+      cancelToken: cancelToken,
+    )
+        .then((response) {
+      Map<String, dynamic> map =
+          (response.data is String) ? jsonDecode(response.data) : response.data;
+      if (map['force_logout'] != null && map['force_logout'] == 1) {
+        response.requestOptions.cancelToken!.cancel();
+        if (onSessionExpired != null) {
+          onSessionExpired!();
+        }
+        throw DioException(
+            requestOptions: response.requestOptions,
+            type: DioExceptionType.cancel,
+            message:
+                'The request was manually cancelled because Auth Token is expired.');
+      }
+      return response;
+    }).catchError(_handleException);
+  }
+
   /// Supports media upload
   Future<Response<dynamic>> postFormData(
     APIType apiType,
