@@ -49,8 +49,9 @@ class RestClient {
     String? path,
     Map<String, dynamic>? query,
     Map<String, dynamic>? headers,
+    bool printDioLogger = true,
   }) async {
-    _addDioInterceptorList();
+    _addDioInterceptorList(printDioLogger);
 
     final standardOptions = await _getApiOptions(apiType);
 
@@ -89,8 +90,9 @@ class RestClient {
     String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
+    bool printDioLogger = true,
   }) async {
-    _addDioInterceptorList();
+    _addDioInterceptorList(printDioLogger);
 
     final standardOptions = await _getApiOptions(apiType);
 
@@ -130,8 +132,9 @@ class RestClient {
     String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
+    bool printDioLogger = true,
   }) async {
-    _addDioInterceptorList();
+    _addDioInterceptorList(printDioLogger);
 
     final standardHeaders = await _getApiOptions(apiType);
     if (headers != null) {
@@ -169,8 +172,9 @@ class RestClient {
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
+    bool printDioLogger = true,
   }) async {
-    _addDioInterceptorList();
+    _addDioInterceptorList(printDioLogger);
 
     final standardHeaders = await _getApiOptions(apiType);
     if (headers != null) {
@@ -209,8 +213,9 @@ class RestClient {
     String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
+    bool printDioLogger = true,
   }) async {
-    _addDioInterceptorList();
+    _addDioInterceptorList(printDioLogger);
 
     final standardHeaders = await _getApiOptions(apiType);
     if (headers != null) {
@@ -249,8 +254,9 @@ class RestClient {
     String? path,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
+    bool printDioLogger = true,
   }) async {
-    _addDioInterceptorList();
+    _addDioInterceptorList(printDioLogger);
 
     final standardHeaders = await _getApiOptions(apiType);
     if (headers != null) {
@@ -286,11 +292,11 @@ class RestClient {
     }).catchError(_handleException);
   }
 
-  void _addDioInterceptorList() {
+  void _addDioInterceptorList(bool printDioLogger) {
     List<Interceptor> interceptorList = [];
     _dio.interceptors.clear();
 
-    if (kDebugMode) {
+    if (kDebugMode && printDioLogger) {
       interceptorList.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
