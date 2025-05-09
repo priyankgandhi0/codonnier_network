@@ -91,6 +91,8 @@ class RestClient {
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
     bool printDioLogger = true,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
   }) async {
     _addDioInterceptorList(printDioLogger);
 
@@ -107,6 +109,8 @@ class RestClient {
       queryParameters: query,
       options: standardOptions,
       cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      onSendProgress: onSendProgress,
     )
         .then((response) {
       Map<String, dynamic> map =
@@ -255,6 +259,8 @@ class RestClient {
     Map<String, dynamic>? headers,
     Map<String, dynamic>? query,
     bool printDioLogger = true,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
   }) async {
     _addDioInterceptorList(printDioLogger);
 
@@ -273,6 +279,8 @@ class RestClient {
       options: standardHeaders,
       queryParameters: query,
       cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      onSendProgress: onSendProgress,
     )
         .then((response) {
       Map<String, dynamic> map =
